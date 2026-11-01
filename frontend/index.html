@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Lifetime Value (CLV) ML Prediction Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                <div class="bg-teal-600 p-2.5 rounded-xl shadow-inner">
+                    <i class="fa-solid fa-chart-line text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">CLV Predictive Analytics</h1>
+                    <p class="text-xs text-teal-300">Supervised Machine Learning Regression Engine</p>
+                </div>
+            </div>
+            <nav class="flex space-x-1.5 bg-slate-950 p-1 rounded-xl">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition bg-teal-600 text-white shadow">
+                    <i class="fa-solid fa-chart-pie mr-1"></i> Executive BI
+                </button>
+                <button onclick="switchTab('tiers')" id="nav-tiers" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition text-slate-300 hover:text-white hover:bg-slate-800">
+                    <i class="fa-solid fa-layer-group mr-1"></i> Predicted Tiers
+                </button>
+                <button onclick="switchTab('predictor')" id="nav-predictor" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition text-slate-300 hover:text-white hover:bg-slate-800">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Customer Predictor
+                </button>
+                <button onclick="switchTab('upload')" id="nav-upload" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition text-slate-300 hover:text-white hover:bg-slate-800">
+                    <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Data Pipeline
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- TAB 1: EXECUTIVE DASHBOARD -->
+        <section id="tab-dashboard" class="space-y-6">
+            <div class="bg-gradient-to-r from-slate-900 via-teal-900 to-slate-800 rounded-2xl p-6 text-white shadow-lg flex flex-col md:flex-row justify-between items-center">
+                <div class="space-y-2 mb-4 md:mb-0">
+                    <span class="bg-teal-500/30 text-teal-200 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Supervised Regression Engine</span>
+                    <h2 class="text-2xl font-bold">12-Month Customer Lifetime Value Intelligence</h2>
+                    <p class="text-slate-300 text-sm max-w-2xl">Predict future customer revenue velocity over the next 365 days using Random Forest regression trained on rolling transaction windows.</p>
+                </div>
+                <div class="bg-slate-950/70 p-3.5 rounded-xl border border-teal-500/30 font-mono text-xs space-y-1">
+                    <div class="text-teal-300 font-bold">Model Performance</div>
+                    <div>R² Accuracy: <span id="metric-r2" class="text-white font-bold">--</span></div>
+                    <div>RMSE Error: <span id="metric-rmse" class="text-white font-bold">--</span></div>
+                </div>
+            </div>
+
+            <!-- CLV Regression Observation & Prediction Timeline Architecture -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-slate-800 flex items-center space-x-2">
+                        <i class="fa-solid fa-timeline text-teal-600"></i>
+                        <span>Supervised Regression Timeline Architecture</span>
+                    </h3>
+                    <span class="bg-teal-50 text-teal-700 text-xs font-semibold px-3 py-1 rounded-full border border-teal-200">24-Month Windowing Split</span>
+                </div>
+                <p class="text-xs text-slate-500">How the Supervised ML Regressor isolates feature history ($X$) to predict future 12-month value ($y$):</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div class="bg-slate-50 border-2 border-dashed border-teal-500/50 rounded-xl p-4 relative">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-teal-800 bg-teal-100 px-2.5 py-0.5 rounded-full">Phase 1: Feature Extraction (X)</span>
+                            <span class="text-xs font-mono font-semibold text-slate-500">Days 0 to 365</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-800">Historical Observation Window</h4>
+                        <p class="text-xs text-slate-600 mt-1">Aggregates Recency, Frequency, Monetary, AOV, Lifespan, and Purchase Velocity across historical customer transaction logs.</p>
+                    </div>
+
+                    <div class="bg-slate-50 border-2 border-dashed border-purple-500/50 rounded-xl p-4 relative">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-purple-800 bg-purple-100 px-2.5 py-0.5 rounded-full">Phase 2: Target Ground Truth (y)</span>
+                            <span class="text-xs font-mono font-semibold text-slate-500">Days 366 to 730</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-800">12-Month Target Window</h4>
+                        <p class="text-xs text-slate-600 mt-1">Computes total future spending ($y$) for model cross-validation, hyperparameter tuning, and error calculation (RMSE/MAE).</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 rounded-xl p-4 text-white font-mono text-xs space-y-2">
+                    <div class="flex justify-between text-slate-400 font-semibold mb-1">
+                        <span>Jan 2024 (First Transaction)</span>
+                        <span class="text-teal-400 font-bold">Cutoff Date (Year 1)</span>
+                        <span>Mar 2026 (Model Inference Date)</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-4 rounded-full flex overflow-hidden p-0.5 border border-slate-700">
+                        <div class="bg-teal-500 h-full rounded-l-full text-[10px] text-slate-950 font-bold flex items-center justify-center" style="width: 50%;">Features (X)</div>
+                        <div class="bg-purple-500 h-full rounded-r-full text-[10px] text-white font-bold flex items-center justify-center" style="width: 50%;">Predicted Target (y)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                    <div class="bg-blue-50 text-blue-600 p-4 rounded-xl text-xl">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Customers</p>
+                        <h3 id="kpi-customers" class="text-2xl font-bold text-slate-800">--</h3>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                    <div class="bg-emerald-50 text-emerald-600 p-4 rounded-xl text-xl">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Hist. Revenue</p>
+                        <h3 id="kpi-hist-revenue" class="text-2xl font-bold text-slate-800">--</h3>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                    <div class="bg-teal-50 text-teal-600 p-4 rounded-xl text-xl">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Predicted 12M CLV</p>
+                        <h3 id="kpi-pred-clv" class="text-2xl font-bold text-slate-800">--</h3>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                    <div class="bg-purple-50 text-purple-600 p-4 rounded-xl text-xl">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Avg Expected CLV</p>
+                        <h3 id="kpi-avg-clv" class="text-2xl font-bold text-slate-800">--</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                        <i class="fa-solid fa-chart-pie text-teal-600"></i>
+                        <span>Predicted CLV Tier Share</span>
+                    </h3>
+                    <div class="relative h-72 flex justify-center items-center">
+                        <canvas id="tierPieChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                        <i class="fa-solid fa-chart-column text-teal-600"></i>
+                        <span>Predicted 12-Month Revenue by Tier ($)</span>
+                    </h3>
+                    <div class="relative h-72">
+                        <canvas id="tierBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: PREDICTED CLV TIERS & STRATEGY -->
+        <section id="tab-tiers" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-800 mb-1">CLV Tiers & Strategic Playbooks</h2>
+                <p class="text-sm text-slate-500">ML-driven customer categorization and marketing action plans.</p>
+            </div>
+            <div id="tiers-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- TAB 3: INDIVIDUAL CUSTOMER PREDICTOR -->
+        <section id="tab-predictor" class="space-y-6 hidden">
+            <div class="bg-slate-900 p-6 rounded-2xl text-white shadow-lg">
+                <h2 class="text-xl font-bold">Individual Customer CLV Inference</h2>
+                <p class="text-slate-300 text-sm">Input customer transaction parameters to execute real-time Supervised Regression predictions.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 lg:col-span-1">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                        <i class="fa-solid fa-sliders text-teal-600"></i>
+                        <span>Inference Parameters</span>
+                    </h3>
+                    <form id="clv-form" onsubmit="handlePredictCLV(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Customer ID</label>
+                            <input type="text" id="cust-id" value="CUST_8888" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Recency (Days since last purchase)</label>
+                            <input type="number" id="cust-recency" value="15" min="0" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Frequency (Total purchases)</label>
+                            <input type="number" id="cust-frequency" value="8" min="1" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Monetary Total Spend ($)</label>
+                            <input type="number" id="cust-monetary" value="950.0" step="0.01" min="0" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Customer Lifespan Age (Days)</label>
+                            <input type="number" id="cust-age" value="365" min="1" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm">
+                        </div>
+                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 rounded-xl shadow transition">
+                            Predict 12-Month CLV
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 lg:col-span-2 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                            <i class="fa-solid fa-bullseye text-teal-600"></i>
+                            <span>Regression Result</span>
+                        </h3>
+                        
+                        <div id="predictor-placeholder" class="py-16 text-center text-slate-400">
+                            <i class="fa-solid fa-chart-line text-4xl mb-3 text-slate-300"></i>
+                            <p class="text-sm">Submit customer metrics on the left to run regression inference.</p>
+                        </div>
+
+                        <div id="predictor-result" class="hidden space-y-6">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs">
+                                <div>
+                                    <span class="text-slate-400 block font-semibold">CUSTOMER ID</span>
+                                    <span id="res-cid" class="font-bold text-slate-800 text-sm">--</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block font-semibold">HISTORICAL SPEND</span>
+                                    <span id="res-spend" class="font-bold text-slate-800 text-sm">--</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block font-semibold">PREDICTED 12M CLV</span>
+                                    <span id="res-clv" class="font-bold text-teal-600 text-sm">--</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block font-semibold">CLV TIER</span>
+                                    <span id="res-tier" class="font-bold text-purple-700 text-sm">--</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl">
+                                    <h4 class="text-xs font-bold uppercase text-blue-800 mb-1">Model Interpretation</h4>
+                                    <p id="res-explanation" class="text-xs text-blue-950">--</p>
+                                </div>
+                                <div class="bg-teal-50 border border-teal-100 p-4 rounded-xl">
+                                    <h4 class="text-xs font-bold uppercase text-teal-800 mb-1">Recommended Retention Playbook</h4>
+                                    <p id="res-strategy" class="text-xs text-teal-950">--</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: DATA PIPELINE & UPLOAD -->
+        <section id="tab-upload" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-800 mb-1">Dataset Management & Retraining</h2>
+                <p class="text-sm text-slate-500">Upload CSV transactions to dynamically re-engineer features and retrain the Supervised Regressor.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-3 flex items-center space-x-2">
+                            <i class="fa-solid fa-file-arrow-up text-teal-600"></i>
+                            <span>Upload Custom Transactions CSV</span>
+                        </h3>
+                        <div class="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center bg-slate-50 relative cursor-pointer">
+                            <input type="file" id="csv-file-input" accept=".csv" class="absolute inset-0 opacity-0 cursor-pointer" onchange="handleFileSelected(event)">
+                            <i class="fa-solid fa-cloud-arrow-up text-4xl text-teal-600 mb-2"></i>
+                            <div id="file-name-display" class="text-sm font-medium text-slate-700">Click to select CSV file</div>
+                        </div>
+                    </div>
+                    <button onclick="uploadDataset()" class="mt-6 w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 rounded-xl shadow transition">
+                        Retrain CLV Model
+                    </button>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center space-x-2">
+                        <i class="fa-solid fa-database text-teal-600"></i>
+                        <span>Active Dataset</span>
+                    </h3>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2 text-sm">
+                        <div class="flex justify-between"><span class="text-slate-500">File Name:</span><span class="font-mono text-slate-700">sample_clv_transactions.csv</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">Records:</span><span class="font-semibold text-slate-700">10,000+ transactions</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">Customers:</span><span class="font-semibold text-slate-700">1,500 distinct customers</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Controller -->
+    <script>
+        let pieChartInstance = null;
+        let barChartInstance = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadDashboardData();
+        });
+
+        function switchTab(tabId) {
+            ['dashboard', 'tiers', 'predictor', 'upload'].forEach(id => {
+                document.getElementById(`tab-${id}`).classList.add('hidden');
+                document.getElementById(`nav-${id}`).classList.remove('bg-teal-600', 'text-white', 'shadow');
+                document.getElementById(`nav-${id}`).classList.add('text-slate-300', 'hover:text-white', 'hover:bg-slate-800');
+            });
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`nav-${tabId}`).classList.add('bg-teal-600', 'text-white', 'shadow');
+            document.getElementById(`nav-${tabId}`).classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-slate-800');
+
+            if (tabId === 'tiers') loadTiersView();
+        }
+
+        async function loadDashboardData() {
+            try {
+                const res = await fetch('/api/summary');
+                const data = await res.json();
+
+                document.getElementById('kpi-customers').innerText = data.total_customers.toLocaleString();
+                document.getElementById('kpi-hist-revenue').innerText = '$' + data.total_historical_revenue.toLocaleString();
+                document.getElementById('kpi-pred-clv').innerText = '$' + data.total_predicted_clv.toLocaleString();
+                document.getElementById('kpi-avg-clv').innerText = '$' + data.avg_predicted_clv.toLocaleString();
+
+                document.getElementById('metric-r2').innerText = data.model_metrics.r2_score;
+                document.getElementById('metric-rmse').innerText = '$' + data.model_metrics.rmse;
+
+                renderCharts(data.tier_distribution);
+            } catch (err) {
+                console.error("Error loading dashboard data:", err);
+            }
+        }
+
+        function renderCharts(tiers) {
+            const labels = tiers.map(t => t.tier);
+            const counts = tiers.map(t => t.count);
+            const clvs = tiers.map(t => t.total_predicted_clv);
+
+            const ctxPie = document.getElementById('tierPieChart').getContext('2d');
+            if (pieChartInstance) pieChartInstance.destroy();
+            pieChartInstance = new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{ data: counts, backgroundColor: ['#0d9488', '#0284c7', '#8b5cf6', '#f59e0b'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const ctxBar = document.getElementById('tierBarChart').getContext('2d');
+            if (barChartInstance) barChartInstance.destroy();
+            barChartInstance = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: 'Predicted CLV ($)', data: clvs, backgroundColor: '#0d9488', borderRadius: 8 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        async function loadTiersView() {
+            const res = await fetch('/api/segments');
+            const data = await res.json();
+            const container = document.getElementById('tiers-container');
+            container.innerHTML = '';
+
+            data.forEach(t => {
+                const ins = t.insights || {};
+                container.innerHTML += `
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">${t.tier}</span>
+                                <h3 class="text-lg font-bold text-slate-800 mt-2">${t.customer_count} Customers</h3>
+                            </div>
+                            <span class="text-right font-mono font-bold text-teal-600">$${t.total_predicted_clv.toLocaleString()}</span>
+                        </div>
+                        <div class="space-y-1.5 text-xs text-slate-600">
+                            <p><strong>Pattern:</strong> ${ins.behavior || '--'}</p>
+                            <p><strong>Business Impact:</strong> ${ins.importance || '--'}</p>
+                            <p><strong>Risk Profile:</strong> ${ins.risk || '--'}</p>
+                        </div>
+                        <div class="bg-teal-50 p-3 rounded-xl border border-teal-100 text-xs text-teal-950">
+                            <strong>Recommended Playbook:</strong> ${ins.strategy || '--'}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function handlePredictCLV(e) {
+            e.preventDefault();
+            const payload = {
+                customer_id: document.getElementById('cust-id').value,
+                recency: parseInt(document.getElementById('cust-recency').value),
+                frequency: parseInt(document.getElementById('cust-frequency').value),
+                monetary: parseFloat(document.getElementById('cust-monetary').value),
+                customer_age: parseInt(document.getElementById('cust-age').value)
+            };
+
+            try {
+                const res = await fetch('/api/predict-customer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                document.getElementById('predictor-placeholder').classList.add('hidden');
+                document.getElementById('predictor-result').classList.remove('hidden');
+
+                document.getElementById('res-cid').innerText = data.CustomerID;
+                document.getElementById('res-spend').innerText = '$' + data.Monetary.toLocaleString();
+                document.getElementById('res-clv').innerText = '$' + data.Predicted_CLV.toLocaleString();
+                document.getElementById('res-tier').innerText = data.CLV_Tier;
+                document.getElementById('res-explanation').innerText = data.Explanation;
+                document.getElementById('res-strategy').innerText = data.Strategy;
+            } catch (err) {
+                alert("Error predicting CLV: " + err);
+            }
+        }
+
+        function handleFileSelected(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('file-name-display').innerText = file.name;
+            }
+        }
+
+        async function uploadDataset() {
+            const fileInput = document.getElementById('csv-file-input');
+            if (!fileInput.files[0]) {
+                alert("Please select a CSV file first.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            try {
+                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(data.message);
+                    loadDashboardData();
+                    switchTab('dashboard');
+                } else {
+                    alert("Error: " + data.detail);
+                }
+            } catch (err) {
+                alert("Upload failed: " + err);
+            }
+        }
+    </script>
+</body>
+</html>
